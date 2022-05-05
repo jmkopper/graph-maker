@@ -7,12 +7,20 @@
     <script defer type="text/javascript" src="load.js"></script>
 </head>
 <body>
-    <canvas id="canvas" width="500" height="500" style="border: 2px solid black;"></canvas><br /><br />
+    <canvas id="canvas" width="500" height="500" style="border: 2px solid black;"></canvas>
+    &nbsp;<textarea id="matrixArea" rows="10" cols="50"></textarea><br />
+    <input type="text" id="labelText" name="labelText"> &nbsp; <button type="button" onclick="set_selected_label()">Change Label</button>
+    <br /><br />
     <button type="button" onclick="set_state('AddNode')">Add Node</button>
     <button type="button" onclick="set_state('Move')">Move Node</button>
     <button type="button" onclick="set_state('Delete')">Delete</button>
     <button type="button" onclick="set_state('AddEdge')">Add Edge</button>
+    <button type="button" onclick="set_state('SelectNode')">Select Node</button><br />
     <button type="button" onclick="clear_canvas()">Clear Canvas</button><br />
     <button type="button" onclick="export_graph()">Export png</button><br />
+    <br />
+    <pre id="stateText">AddNode</pre>
+    <br />
+    <button type="button" onclick="generate_matrix()" >Generate Matrix</button>
 </body>
 </html>

@@ -16,6 +16,7 @@ var state = 'AddNode'
 // Set state. Used by HTML buttons
 function set_state(s) {
     state = s;
+    document.getElementById('stateText').innerHTML = s + nodes.length;
 }
 
 // Export to jpg
@@ -54,8 +55,24 @@ function mouseup(e) {
 }
 
 
+// Detect click inside canvas border CHANGE THIS
+function within_border(e) {
+    if (e.x <= 500 && e.y <= 500) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+//
 // Process clicks
+//
 function click(e) {
+    if (!within_border(e))
+    {
+        return false;
+    }
     let target = within(e.x, e.y);
     switch(state)
     {
@@ -66,7 +83,8 @@ function click(e) {
                 radius: NODE_RADIUS,
                 fillStyle: NODE_COLOR,
                 strokeStyle: NODE_BORDER_COLOR,
-                label: 'none'
+                label: nodes.length,
+                neighbors: []
             };
             nodes.push(node);
             draw();
@@ -80,6 +98,8 @@ function click(e) {
                 let edge = {from: selection, to: target};
                 if (edge in edges == false) {
                     edges.push(edge);
+                    from.neighbors.push(to);
+                    to.neighbors.push(from);
                 }
                 deselect();
             }
@@ -87,9 +107,39 @@ function click(e) {
                 select(target);
             }
             break;
-}
+
+        case 'SelectNode':
+            if (target) {
+                select(target);
+            }
+            break;
+
+        case 'Delete':
+            if (target) {
+                delete_node(target);
+            }
+            break;
+    }
 }
 
+
+// Delete node and attached edges
+function delete_node(node) {
+    let index = nodes.indexOf(node);
+    nodes.splice(index, 1);
+
+    // Find the attached edges
+    let edges_to_remove = [];
+    for (let i=0; i<edges.length; i++) {
+        if (edges[i].from == node || edges[i].to == node) {
+            edges_to_remove.push(i);
+        }
+    }
+    for (let i = edges_to_remove.length - 1; i >= 0; i--) {
+        edges.splice(edges_to_remove[i], 1);
+    }
+    draw();
+}
 
 // Mark selected node
 function select(node) {
@@ -130,7 +180,9 @@ function move(e) {
 }
 
 
+//
 // Draw nodes and edges
+//
 function draw() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     ctx.lineWidth = EDGE_WEIGHT;
@@ -159,8 +211,35 @@ function draw() {
         ctx.stroke();
         ctx.fillStyle = '#000000'
         // Gotta figure out how to center properly
-        ctx.fillText(i, node.x, node.y+4)
+        ctx.fillText(node.label, node.x, node.y+4)
     }
+}
+
+// Change labels
+function set_selected_label() {
+    if (selection) {
+        selection.label = document.getElementById('labelText').value;
+        draw();
+    }
+}
+
+
+// Generate adjacency matrix
+function generate_matrix() {
+    matrix = [];
+    for (let i = 0; i < nodes.length; i++) {
+        let row = [];
+        for (let j = 0; j < nodes.length; j++)
+        {
+            if (nodes[j] in nodes[i].neighbors == true) {
+                row.push(1);
+            } else {
+                row.push(0);
+            }
+            matrix.splice(1, 0, row);
+        }
+    }
+    document.getElementById('matrixArea').value = matrix.toString();
 }
 
 window.onmousemove = move;
