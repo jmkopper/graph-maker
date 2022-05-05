@@ -2,21 +2,24 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 const NODE_RADIUS = 15
-const NODE_COLOR = '#22cccc'
-const NODE_BORDER_COLOR = '#009999'
-const SELECTED_NODE_COLOR = '#00aaaa'
-const FONT_COLOR = '#000000'
+const NODE_COLOR = '#22cccc';
+const NODE_BORDER_COLOR = '#009999';
+const SELECTED_NODE_COLOR = '#00aaaa';
+const FONT_COLOR = '#000000';
 const EDGE_WEIGHT = 3;
 
 var nodes = [];
 var edges = [];
+var selection = undefined;
 var state = 'AddNode'
+var id_next = 0;
 
 
 // Set state. Used by HTML buttons
 function set_state(s) {
+    deselect();
     state = s;
-    document.getElementById('stateText').innerHTML = s + nodes.length;
+    document.getElementById('stateText').innerHTML = s + ' ' + nodes.length;
 }
 
 // Export to jpg
@@ -38,7 +41,7 @@ function clear_canvas() {
 // Process mouse down action
 function mousedown(e) {
     if (state == 'Move') {
-        let target = within(e.x, e.y);
+        let target = within_node(e.x, e.y);
         if (target) {
             select(target);
         }
@@ -73,7 +76,7 @@ function click(e) {
     {
         return false;
     }
-    let target = within(e.x, e.y);
+    let target = within_node(e.x, e.y);
     switch(state)
     {
         case 'AddNode':
@@ -84,22 +87,26 @@ function click(e) {
                 fillStyle: NODE_COLOR,
                 strokeStyle: NODE_BORDER_COLOR,
                 label: nodes.length,
+                id: id_next,
                 neighbors: []
             };
+            id_next++;
             nodes.push(node);
-            draw();
             break;
 
         case 'AddEdge':
             if (target && !selection) {
                 select(target)
             }
-            else if (target && selection && target !== selection) {
-                let edge = {from: selection, to: target};
-                if (edge in edges == false) {
+            else if (target && selection && (target !== selection)) {
+                let edge = {
+                            from: selection,
+                            to: target
+                        };
+                if (!edges.includes(edge)) {
                     edges.push(edge);
-                    from.neighbors.push(to);
-                    to.neighbors.push(from);
+                    selection.neighbors.push(target.id);
+                    target.neighbors.push(selection.id);
                 }
                 deselect();
             }
@@ -120,6 +127,7 @@ function click(e) {
             }
             break;
     }
+    draw();
 }
 
 
@@ -148,19 +156,22 @@ function select(node) {
     }
     selection = node;
     selection.fillStyle = SELECTED_NODE_COLOR;
+    document.getElementById('labelText').value = selection.label;
     draw();
 }
 
 
 // Clear selection
 function deselect() {
-    selection.fillStyle = NODE_COLOR;
+    if (selection) {
+        selection.fillStyle = NODE_COLOR;
+    }
     selection = undefined;
     draw();
 }
 
 // Return a node if (x,y) is within the circle (actually square) for that node
-function within(x, y) {
+function within_node(x, y) {
     return nodes.find(n => {
         return x > (n.x - n.radius) &&
             y > (n.y - n.radius) &&
@@ -172,7 +183,7 @@ function within(x, y) {
 
 // Move selection while in state "Move"
 function move(e) {
-    if (state == 'Move'){
+    if (state == 'Move' && selection){
         selection.x = e.x;
         selection.y = e.y;
         draw();
@@ -226,25 +237,38 @@ function set_selected_label() {
 
 // Generate adjacency matrix
 function generate_matrix() {
-    matrix = [];
-    for (let i = 0; i < nodes.length; i++) {
+    let matrix = [];
+    for (node of nodes) {
         let row = [];
-        for (let j = 0; j < nodes.length; j++)
+        console.log(node.neighbors);
+        for (neighbor of nodes)
         {
-            if (nodes[j] in nodes[i].neighbors == true) {
+            console.log(neighbor.id);
+            if (node.neighbors.includes(neighbor.id)) {
+                console.log('added' + ' ' + neighbor.id)
                 row.push(1);
             } else {
                 row.push(0);
             }
-            matrix.splice(1, 0, row);
         }
+        matrix.push(row);
+        console.log(row);
     }
-    document.getElementById('matrixArea').value = matrix.toString();
+    let outs = "";
+    for (line of matrix) {
+        outs += line + "\n";
+    }
+    document.getElementById('matrixArea').value = outs;
+}
+
+
+// Import from an adjacency matrix
+function import_from_matrix() {
+    let matrix = []
+    return;
 }
 
 window.onmousemove = move;
 window.onmousedown = mousedown;
 window.onmouseup = mouseup;
 window.onclick = click;
-
-var selection = undefined;
