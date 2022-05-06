@@ -2,11 +2,15 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 const NODE_RADIUS = 15
-const NODE_COLOR = '#22cccc';
-const NODE_BORDER_COLOR = '#009999';
-const SELECTED_NODE_COLOR = '#00aaaa';
-const FONT_COLOR = '#000000';
+const NODE_COLOR = '#413438';
+const NODE_BORDER_COLOR = '#996056';
+const SELECTED_NODE_COLOR = '#A18E8B';
+const FONT_COLOR = '#F7F3F2';
 const EDGE_WEIGHT = 3;
+const BG_COLOR = '#413438';
+
+ctx.fillStyle = BG_COLOR;
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 var nodes = [];
 var edges = [];
@@ -19,7 +23,7 @@ var id_next = 0;
 function set_state(s) {
     deselect();
     state = s;
-    document.getElementById('stateText').innerHTML = s + ' ' + nodes.length;
+    document.getElementById('stateText').innerHTML = 'State ' + s;
 }
 
 // Export to jpg
@@ -40,8 +44,9 @@ function clear_canvas() {
 
 // Process mouse down action
 function mousedown(e) {
+    let pos = get_mouse_pos(canvas, e);
     if (state == 'Move') {
-        let target = within_node(e.x, e.y);
+        let target = within_node(pos.x, pos.y);
         if (target) {
             select(target);
         }
@@ -58,9 +63,22 @@ function mouseup(e) {
 }
 
 
+// Get mouse position within canvas
+function get_mouse_pos(canvas, e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
 // Detect click inside canvas border CHANGE THIS
 function within_border(e) {
-    if (e.x <= 500 && e.y <= 500) {
+    pos = get_mouse_pos(canvas, e);
+    rect = canvas.getBoundingClientRect();
+    console.log(rect.left, rect.top);
+
+    if (pos.x <= canvas.width && pos.y <= canvas.height) {
         return true;
     } else {
         return false;
@@ -76,13 +94,14 @@ function click(e) {
     {
         return false;
     }
-    let target = within_node(e.x, e.y);
+    let pos = get_mouse_pos(canvas, e);
+    let target = within_node(pos.x, pos.y);
     switch(state)
     {
         case 'AddNode':
             let node = {
-                x: e.x,
-                y: e.y,
+                x: pos.x,
+                y: pos.y,
                 radius: NODE_RADIUS,
                 fillStyle: NODE_COLOR,
                 strokeStyle: NODE_BORDER_COLOR,
@@ -183,9 +202,10 @@ function within_node(x, y) {
 
 // Move selection while in state "Move"
 function move(e) {
+    let pos = get_mouse_pos(canvas, e);
     if (state == 'Move' && selection){
-        selection.x = e.x;
-        selection.y = e.y;
+        selection.x = pos.x;
+        selection.y = pos.y;
         draw();
     }
 }
@@ -195,7 +215,8 @@ function move(e) {
 // Draw nodes and edges
 //
 function draw() {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.fillStyle = BG_COLOR;
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
     ctx.lineWidth = EDGE_WEIGHT;
     ctx.font = '12px sans-serif';
     ctx.textAlign = 'center';
@@ -220,7 +241,7 @@ function draw() {
         ctx.strokeStyle = node.strokeStyle;
         ctx.fill();
         ctx.stroke();
-        ctx.fillStyle = '#000000'
+        ctx.fillStyle = FONT_COLOR;
         // Gotta figure out how to center properly
         ctx.fillText(node.label, node.x, node.y+4)
     }
@@ -254,11 +275,12 @@ function generate_matrix() {
         matrix.push(row);
         console.log(row);
     }
-    let outs = "";
+    let line_out = '[[';
     for (line of matrix) {
-        outs += line + "\n";
+        line_out += line + '],\n [';
     }
-    document.getElementById('matrixArea').value = outs;
+    line_out = line_out.slice(0, -4) + ']';
+    document.getElementById('matrixArea').value = line_out;
 }
 
 

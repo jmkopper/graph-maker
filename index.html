@@ -7,10 +7,19 @@
     <script defer type="text/javascript" src="load.js"></script>
 </head>
 <body>
-    <canvas id="canvas" width="500" height="500" style="border: 2px solid black;"></canvas>
-    &nbsp;<textarea id="matrixArea" rows="10" cols="50"></textarea><br />
-    <input type="text" id="labelText" name="labelText"> &nbsp; <button type="button" onclick="set_selected_label()">Change Label</button>
-    <br /><br />
+    <div id="wrapper">
+    <div style="position: relative" id="canvasdiv">
+        <canvas id="canvas" width="500" height="500" style="border: 2px solid black;"></canvas>
+    </div>
+    <div style="position: relative;" id="nodenamediv">
+        <input type="text" id="labelText" name="labelText"> &nbsp; <button type="button" onclick="set_selected_label()">Change Label</button><br /><br /><br />
+    </div>
+    <div style="position: relative;" id="textAreadiv">
+        <textarea id="matrixArea" rows="10" cols="50"></textarea><br />
+        <button type="button" onclick="generate_matrix()">Generate Matrix</button>&nbsp;<button type="button" onclick="import_from_matrix()">Import From Matrix</button>
+    </div>
+    </div>
+    <br />
     <button type="button" onclick="set_state('AddNode')">Add Node</button>
     <button type="button" onclick="set_state('Move')">Move Node</button>
     <button type="button" onclick="set_state('Delete')">Delete</button>
@@ -20,7 +29,5 @@
     <button type="button" onclick="export_graph()">Export png</button><br />
     <br />
     <pre id="stateText">AddNode</pre>
-    <br />
-    <button type="button" onclick="generate_matrix()">Generate Matrix</button><button type="button" onclick="import_from_matrix()">Import From Matrix</button>
 </body>
 </html>

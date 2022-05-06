@@ -6,21 +6,35 @@
 
 /** Reset */
 html, body, nav, ul, h1, h2, h3, h4, a, canvas {
-    margin: 0px;
+    margin: 20px;
     padding: 0px;
     color: var(--text-color);
 }
 html, body {
-    font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     font-size: var(--root-font-size);
     background: var(--bg);
     height: 100%;
     width: 100%;
-    overflow: hidden;
 }
 *, body, button, input, select, textarea, canvas {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     outline: 0;
+}
+
+#wrapper {
+    /*border: 1px solid black;*/
+    overflow: hidden;
+}
+
+#canvasdiv {
+    float:left;
+    /* border: 1px solid red; */
+}
+
+#textAreadiv {
+    /* border: 1px solid green; */
+    overflow: hidden;
 }
