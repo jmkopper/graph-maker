@@ -9,6 +9,7 @@ const SELECTED_EDGE_COLOR = '#a9efda';
 const FONT_COLOR = '#a9efda';
 const EDGE_WEIGHT = 3;
 const BG_COLOR = '#3a405a';
+const FONT_STYLE = 'bold 14px sans-serif';
 
 ctx.fillStyle = BG_COLOR;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -21,7 +22,7 @@ function draw() {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
     ctx.lineWidth = EDGE_WEIGHT;
-    ctx.font = '12px sans-serif';
+    ctx.font = FONT_STYLE;
     ctx.textAlign = 'center';
 
     // Draw edges
