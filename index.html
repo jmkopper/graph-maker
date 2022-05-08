@@ -22,8 +22,8 @@
         <textarea id="matrixArea" rows="10" cols="50"></textarea><br />
         <button type="button" onclick="generate_matrix()">Generate Matrix</button>&nbsp;<button type="button" onclick="import_from_matrix()">Import From Matrix</button><br /><br />
         Edges:<br />
-        <select size="8" id="edgeselect" style="width: 250px;" onchange="select_edge_by_id(this.options[this.selectedIndex].id)">
-        </select>
+        <select size="8" id="edgeselect" style="width: 250px;" onchange="select_edge_by_id(this.options[this.selectedIndex].id)"></select><br /><br />
+        <input type="text" id="edgeWeightText" name="edgeWeightText"> &nbsp; <button type="button" onclick="set_edge_weight()">Change edge weight</button><br /><br /><br />
     </div>
     </div>
     <br />

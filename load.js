@@ -108,6 +108,7 @@ function delete_node(node) {
     for (let i = edges_to_remove.length - 1; i >= 0; i--) {
         edges.splice(edges_to_remove[i], 1);
     }
+    update_edge_selector();
     draw();
 }
 
@@ -121,6 +122,7 @@ function select_edge_by_id(edge_id) {
     edge.from.strokeStyle = SELECTED_EDGE_COLOR;
     edge.to.strokeStyle = SELECTED_EDGE_COLOR;
     selected_edge = edge;
+    document.getElementById('edgeWeightText').value = edge.weight;
     draw();
 }
 
@@ -147,6 +149,21 @@ function add_edge_to_selector(edge) {
 }
 
 
+// Reconstruct edge selector (called when a node is deleted)
+function update_edge_selector() {
+    let selector = document.getElementById('edgeselect');
+
+    // Delete all options
+    while (selector.options.length > 0) {
+        selector.remove(0);
+    }
+
+    // Generate new ones
+    for (const edge of edges) {
+        add_edge_to_selector(edge);
+    }
+}
+
 // Clear selections
 function deselect() {
     if (selection) {
@@ -168,6 +185,15 @@ function deselect() {
 function set_selected_label() {
     if (selection) {
         selection.label = document.getElementById('labelText').value;
+        draw();
+    }
+}
+
+
+// Change weights
+function set_edge_weight() {
+    if (selected_edge) {
+        selected_edge.weight = document.getElementById('edgeWeightText').value;
         draw();
     }
 }

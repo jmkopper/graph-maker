@@ -62,5 +62,6 @@ function clear_canvas() {
     nodes.length = 0;
     edges.length = 0;
     set_state('Move');
+    update_edge_selector();
     draw();
 }
