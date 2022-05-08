@@ -11,12 +11,16 @@
     <div style="position: relative" id="canvasdiv">
         <canvas id="canvas" width="500" height="500" style="border: 2px solid black;"></canvas>
     </div>
+    <br /><br />
     <div style="position: relative;" id="nodenamediv">
-        <input type="text" id="labelText" name="labelText"> &nbsp; <button type="button" onclick="set_selected_label()">Change Label</button><br /><br /><br />
+        <input type="text" id="labelText" name="labelText"> &nbsp; <button type="button" onclick="set_selected_label()">Relabel Node</button><br /><br /><br />
     </div>
     <div style="position: relative;" id="textAreadiv">
         <textarea id="matrixArea" rows="10" cols="50"></textarea><br />
-        <button type="button" onclick="generate_matrix()">Generate Matrix</button>&nbsp;<button type="button" onclick="import_from_matrix()">Import From Matrix</button>
+        <button type="button" onclick="generate_matrix()">Generate Matrix</button>&nbsp;<button type="button" onclick="import_from_matrix()">Import From Matrix</button><br /><br />
+        Edges:<br />
+        <select size="8" id="edgeselect" style="width: 250px;" onchange="select_edge_by_id(this.options[this.selectedIndex].id)">
+        </select>
     </div>
     </div>
     <br />

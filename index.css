@@ -2,6 +2,16 @@
 :root {
     --root-font-size: 12px;
     --bg: #cccccc;
+
+    --medium-aquamarine: #76e5c4;
+    --deep-champagne: #f5d491;
+    --thistle: #e8c7de;
+    --independence: #3a405a;
+
+    --snow: #f7f3f2ff;
+    --cinereous: #a18e8bff;
+    --redwood: #996056ff;
+    --black-coffee: #413438ff;
 }
 
 /** Reset */

@@ -2,12 +2,13 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 const NODE_RADIUS = 15
-const NODE_COLOR = '#413438';
-const NODE_BORDER_COLOR = '#996056';
-const SELECTED_NODE_COLOR = '#A18E8B';
-const FONT_COLOR = '#F7F3F2';
+const NODE_COLOR = '#3a405a';
+const NODE_BORDER_COLOR = '#e8c7de';
+const SELECTED_NODE_COLOR = '#770000';
+const SELECTED_EDGE_COLOR = '#a9efda';
+const FONT_COLOR = '#a9efda';
 const EDGE_WEIGHT = 3;
-const BG_COLOR = '#413438';
+const BG_COLOR = '#3a405a';
 
 ctx.fillStyle = BG_COLOR;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -15,8 +16,10 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 var nodes = [];
 var edges = [];
 var selection = undefined;
+var selected_edge = undefined;
 var state = 'AddNode'
 var id_next = 0;
+var edge_id_next = 0;
 
 
 // Set state. Used by HTML buttons
@@ -72,7 +75,7 @@ function get_mouse_pos(canvas, e) {
     };
 }
 
-// Detect click inside canvas border CHANGE THIS
+// Detect click inside canvas border
 function within_border(e) {
     pos = get_mouse_pos(canvas, e);
     rect = canvas.getBoundingClientRect();
@@ -83,6 +86,38 @@ function within_border(e) {
     } else {
         return false;
     }
+}
+
+
+// Find a node given an id
+function get_node_by_id(n) {
+    for (let node in nodes) {
+        if (node.id == n) {
+            return node;
+        }
+    }
+    return false;
+}
+
+
+// Find an edge given an id
+function get_edge_by_id(n) {
+    for (let i = 0; i < edges.length; i++) {
+        if (edges[i].id == n) {
+            return edges[i];
+        }
+    }
+    return false;
+}
+
+
+// Update the edge selector when an edge is added
+function add_edge_to_selector(edge) {
+    let selector = document.getElementById('edgeselect');
+    let opt = document.createElement('option');
+    opt.id = edge.id;
+    opt.innerHTML = edge.from.label + ' -> ' + edge.to.label;
+    selector.appendChild(opt);
 }
 
 
@@ -119,13 +154,17 @@ function click(e) {
             }
             else if (target && selection && (target !== selection)) {
                 let edge = {
+                            strokeStyle: NODE_BORDER_COLOR,
                             from: selection,
-                            to: target
+                            to: target,
+                            id: edge_id_next
                         };
-                if (!edges.includes(edge)) {
+                if (!selection.neighbors.includes(target.id)) {
                     edges.push(edge);
                     selection.neighbors.push(target.id);
                     target.neighbors.push(selection.id);
+                    add_edge_to_selector(edge);
+                    edge_id_next++;
                 }
                 deselect();
             }
@@ -168,13 +207,25 @@ function delete_node(node) {
     draw();
 }
 
+
+// Mark selected edge
+function select_edge_by_id(edge_id) {
+    let edge = get_edge_by_id(edge_id);
+    set_state('SelectEdge');
+    edge.strokeStyle = SELECTED_EDGE_COLOR;
+    edge.from.strokeStyle = SELECTED_EDGE_COLOR;
+    edge.to.strokeStyle = SELECTED_EDGE_COLOR;
+    selected_edge = edge;
+    draw();
+}
+
 // Mark selected node
 function select(node) {
     if (selection) {
         deselect();
     }
     selection = node;
-    selection.fillStyle = SELECTED_NODE_COLOR;
+    selection.strokeStyle = SELECTED_EDGE_COLOR;
     document.getElementById('labelText').value = selection.label;
     draw();
 }
@@ -183,9 +234,16 @@ function select(node) {
 // Clear selection
 function deselect() {
     if (selection) {
-        selection.fillStyle = NODE_COLOR;
+        selection.strokeStyle = NODE_BORDER_COLOR;
+    }
+
+    if (selected_edge) {
+        selected_edge.strokeStyle = NODE_BORDER_COLOR;
+        selected_edge.from.strokeStyle = NODE_BORDER_COLOR;
+        selected_edge.to.strokeStyle = NODE_BORDER_COLOR;
     }
     selection = undefined;
+    selected_edge = undefined;
     draw();
 }
 
@@ -226,7 +284,7 @@ function draw() {
         let fromNode = edges[i].from;
         let toNode = edges[i].to;
         ctx.beginPath();
-        ctx.strokeStyle = fromNode.strokeStyle;
+        ctx.strokeStyle = edges[i].strokeStyle;
         ctx.moveTo(fromNode.x, fromNode.y);
         ctx.lineTo(toNode.x, toNode.y);
         ctx.stroke();
@@ -236,7 +294,7 @@ function draw() {
     for (let i = 0; i < nodes.length; i++) {
         let node = nodes[i];
         ctx.beginPath();
-        ctx.fillStyle = node.selected ? node.selectedFill : node.fillStyle;
+        ctx.fillStyle = node.fillStyle;
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true);
         ctx.strokeStyle = node.strokeStyle;
         ctx.fill();
