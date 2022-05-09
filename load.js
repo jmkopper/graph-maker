@@ -71,79 +71,13 @@ function get_edge_by_vertices(node1, node2) {
 }
 
 
-// Return a node if (x,y) is within the circle (actually square) for that node
-function within_node(x, y) {
-    return nodes.find(n => {
-        return x > (n.x - n.radius) &&
-            y > (n.y - n.radius) &&
-            x < (n.x + n.radius) &&
-            y < (n.y + n.radius);
-    });
-}
-
-
-// Move selection while in state "Move"
-function move(e) {
-    let pos = get_mouse_pos(canvas, e);
-    if (state == 'Move' && selection){
-        selection.x = pos.x;
-        selection.y = pos.y;
-        draw();
-    }
-}
-
-
-// Delete node and attached edges
-function delete_node(node) {
-    let index = nodes.indexOf(node);
-    nodes.splice(index, 1);
-
-    // Find the attached edges
-    let edges_to_remove = [];
-    for (let i=0; i<edges.length; i++) {
-        if (edges[i].from == node || edges[i].to == node) {
-            edges_to_remove.push(i);
-        }
-    }
-    for (let i = edges_to_remove.length - 1; i >= 0; i--) {
-        edges.splice(edges_to_remove[i], 1);
-    }
-    update_edge_selector();
-    draw();
-}
-
-
-
-// Mark selected edge
-function select_edge_by_id(edge_id) {
-    let edge = get_edge_by_id(edge_id);
-    set_state('SelectEdge');
-    edge.strokeStyle = SELECTED_EDGE_COLOR;
-    edge.from.strokeStyle = SELECTED_EDGE_COLOR;
-    edge.to.strokeStyle = SELECTED_EDGE_COLOR;
-    selected_edge = edge;
-    document.getElementById('edgeWeightText').value = edge.weight;
-    draw();
-}
-
-
-// Mark selected node
-function select(node) {
-    if (selection) {
-        deselect();
-    }
-    selection = node;
-    selection.strokeStyle = SELECTED_EDGE_COLOR;
-    document.getElementById('labelText').value = selection.label;
-    draw();
-}
-
 
 // Add an edge to the edge selector
 function add_edge_to_selector(edge) {
     let selector = document.getElementById('edgeselect');
     let opt = document.createElement('option');
     opt.id = edge.id;
+    opt.value = edge.id;
     opt.innerHTML = edge.from.label + ' -> ' + edge.to.label;
     selector.appendChild(opt);
 }
@@ -185,6 +119,7 @@ function deselect() {
 function set_selected_label() {
     if (selection) {
         selection.label = document.getElementById('labelText').value;
+        update_edge_selector();
         draw();
     }
 }
@@ -194,6 +129,7 @@ function set_selected_label() {
 function set_edge_weight() {
     if (selected_edge) {
         selected_edge.weight = document.getElementById('edgeWeightText').value;
+        document.getElementById('edgeText').innerHTML = 'Updated edge weight to ' + selected_edge.weight;
         draw();
     }
 }

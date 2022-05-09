@@ -65,4 +65,5 @@ function clear_canvas() {
     set_state('Move');
     update_edge_selector();
     draw();
+    id_next = 0;
 }
