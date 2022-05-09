@@ -13,7 +13,6 @@ function generate_matrix() {
             }
         }
         matrix.push(row);
-        console.log(row);
     }
     let line_out = '[[';
     for (line of matrix) {
@@ -24,6 +23,7 @@ function generate_matrix() {
 }
 
 
+// Convert matrix from text to 2d-array
 function parse_matrix(matrix)
 {
     // Remove whitespace
@@ -31,31 +31,36 @@ function parse_matrix(matrix)
     matrix = matrix.replace(/ /g, '');
 
     let double_matrix = [];
-    let stack = [];
+    let row = [];
 
     for (let c of matrix) {
-        if (c == '{') {
-            stack.push('{');
-        } else if (c == '}') {
-            stack.pop();
+        if (c != '[' && c != ']' && c != ','){
+            row.push(parseInt(c));
         }
-        
+        if (c == ']' && row.length > 0) {
+            double_matrix.push(row);
+            row = [];
+        }
     }
+    return double_matrix;
 }
 
 // Import from an adjacency matrix
-function import_from_matrix(matrix) {
+function import_from_matrix() {
+    let matrix = parse_matrix(document.getElementById('matrixArea').value);
     clear_canvas();
     var new_nodes = [];
     var new_edges = [];
     id_next = 0;
     edge_id_next++;
 
+    var rect = canvas.getBoundingClientRect();
+
     // Make the new nodes
     for (let row of matrix) {
         let node = {
-            x: 100,
-            y: 100,
+            x: rect.left + 50 * id_next,
+            y: rect.top + 10 * (-1)**id_next,
             radius: NODE_RADIUS,
             fillStyle: NODE_COLOR,
             strokeStyle: NODE_BORDER_COLOR,
@@ -67,16 +72,16 @@ function import_from_matrix(matrix) {
         new_nodes.push(node);
     }
 
-    // Make the new edges
+    // Make the new edges, avoid duplicates
     for (let i = 0; i < new_nodes.length; i++) {
-        for (let j of row) {
-            if (j > 0 && !new_nodes[i].neighbors.includes(new_nodes[j])) {
+        for (let j = 0; j < new_nodes.length; j++) {
+            if (matrix[i][j] > 0 && !new_nodes[i].neighbors.includes(new_nodes[j].id)) {
                 let edge = {
                     strokeStyle: NODE_BORDER_COLOR,
-                    from: selection,
-                    to: target,
+                    from: new_nodes[i],
+                    to: new_nodes[j],
                     id: edge_id_next,
-                    weight: 1
+                    weight: matrix[i][j]
                 };
                 new_edges.push(edge);
                     new_nodes[i].neighbors.push(new_nodes[j].id);
@@ -85,6 +90,8 @@ function import_from_matrix(matrix) {
             }
         }
     }
+    edges = new_edges;
+    nodes = new_nodes;
     update_edge_selector();
     draw();
 }

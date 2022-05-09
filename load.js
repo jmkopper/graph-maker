@@ -29,8 +29,6 @@ function get_mouse_pos(canvas, e) {
 function within_border(e) {
     pos = get_mouse_pos(canvas, e);
     rect = canvas.getBoundingClientRect();
-    console.log(rect.left, rect.top);
-
     return pos.x <= canvas.width && pos.y <= canvas.height;
 }
 
