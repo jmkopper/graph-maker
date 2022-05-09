@@ -31,43 +31,30 @@ function within_border(e) {
     rect = canvas.getBoundingClientRect();
     console.log(rect.left, rect.top);
 
-    if (pos.x <= canvas.width && pos.y <= canvas.height) {
-        return true;
-    } else {
-        return false;
-    }
+    return pos.x <= canvas.width && pos.y <= canvas.height;
 }
 
 
 // Find a node given an id
 function get_node_by_id(n) {
-    for (let node in nodes) {
-        if (node.id == n) {
-            return node;
-        }
-    }
-    return false;
+    return nodes.find(node => {
+            return node.id == n;
+    });
 }
 
 
 // Find an edge given an id
 function get_edge_by_id(n) {
-    for (let i = 0; i < edges.length; i++) {
-        if (edges[i].id == n) {
-            return edges[i];
-        }
-    }
-    return false;
+    return edges.find(edge => {
+        return edge.id == n;
+    });
 }
 
 
 function get_edge_by_vertices(node1, node2) {
-    for (const edge of edges) {
-        if ((edge.from.id == node1.id && edge.to.id == node2.id) || (edge.from.id == node2.id && edge.to.id == node1.id)) {
-            return edge;
-        }
-    }
-    return false;
+    return edges.find(edge => {
+        return (edge.from.id == node1.id && edge.to.id == node2.id) || (edge.from.id == node2.id && edge.to.id == node1.id);
+    });
 }
 
 
@@ -78,7 +65,7 @@ function add_edge_to_selector(edge) {
     let opt = document.createElement('option');
     opt.id = edge.id;
     opt.value = edge.id;
-    opt.innerHTML = edge.from.label + ' -> ' + edge.to.label;
+    opt.innerHTML = edge.from.label + ' -> ' + edge.to.label + ' weight ' + edge.weight;
     selector.appendChild(opt);
 }
 
@@ -130,6 +117,7 @@ function set_edge_weight() {
     if (selected_edge) {
         selected_edge.weight = document.getElementById('edgeWeightText').value;
         document.getElementById('edgeText').innerHTML = 'Updated edge weight to ' + selected_edge.weight;
+        update_edge_selector();
         draw();
     }
 }
