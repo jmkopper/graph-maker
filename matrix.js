@@ -100,6 +100,7 @@ function import_from_matrix() {
 // Generator for the new node coordinates
 // I want this thing to yield a struct {x: xcoord, y: y_coord} but
 // I don't know how to call that thing without accidentally incrementing the generator
+//test commit
 function* coordinate_generator(n) {
     let canvas_margin = 50;
     let y_offset = 50;
