@@ -53,14 +53,14 @@ function import_from_matrix() {
     var new_edges = [];
     id_next = 0;
     edge_id_next++;
-
-    var rect = canvas.getBoundingClientRect();
+    const coordinate_gen = coordinate_generator(matrix.length);
 
     // Make the new nodes
     for (let row of matrix) {
+        let new_coords = coordinate_gen.next().value;
         let node = {
-            x: rect.left + 50 * id_next,
-            y: rect.top + 10 * (-1)**id_next,
+            x: new_coords[0], //rect.left + 50 * id_next
+            y: new_coords[1], //rect.top + 190 + 20 * (-1)**id_next
             radius: NODE_RADIUS,
             fillStyle: NODE_COLOR,
             strokeStyle: NODE_BORDER_COLOR,
@@ -94,4 +94,32 @@ function import_from_matrix() {
     nodes = new_nodes;
     update_edge_selector();
     draw();
+}
+
+
+// Generator for the new node coordinates
+// I want this thing to yield a struct {x: xcoord, y: y_coord} but
+// I don't know how to call that thing without accidentally incrementing the generator
+function* coordinate_generator(n) {
+    let canvas_margin = 50;
+    let y_offset = 50;
+    let x_offset = 50;
+    var rect = canvas.getBoundingClientRect();
+    for (let i = 0; i < n; i++)
+    {
+        if (rect.left + x_offset > canvas.width - 50) {
+            y_offset += 50;
+            x_offset = 50;
+        }
+
+        if (rect.top + y_offset > canvas.height - 50) {
+            y_offset = 50;
+            x_offset = 50;
+        }
+
+        let new_coords = [rect.left + x_offset, rect.top + y_offset];
+        yield new_coords;
+
+        x_offset += 50
+    }
 }
