@@ -1,4 +1,6 @@
-// Generate adjacency matrix
+/* matrix.js handles computations related to adjacency matrices */
+
+// Generate adjacency matrix given the set of nodes and edges
 function generate_matrix() {
     let matrix = [];
     for (const node of nodes) {
@@ -23,7 +25,7 @@ function generate_matrix() {
 }
 
 
-// Convert matrix from text to 2d-array
+// Convert string to a 2d array. ignores whitespace. requires square brackets []
 function parse_matrix(matrix)
 {
     // Remove whitespace
@@ -97,25 +99,23 @@ function import_from_matrix() {
 }
 
 
-// Generator for the new node coordinates
+// Generator for the new node coordinates to wrap nicely
 // I want this thing to yield a struct {x: xcoord, y: y_coord} but
 // I don't know how to call that thing without accidentally incrementing the generator
-//test commit
 function* coordinate_generator(n) {
     let canvas_margin = 50;
-    let y_offset = 50;
-    let x_offset = 50;
-    var rect = canvas.getBoundingClientRect();
+    let y_offset = canvas_margin;
+    let x_offset = canvas_margin;
     for (let i = 0; i < n; i++)
     {
-        if (rect.left + x_offset > canvas.width - 50) {
-            y_offset += 50;
-            x_offset = 50;
+        if (rect.left + x_offset > canvas.width - canvas_margin - 2*NODE_RADIUS) {
+            y_offset += canvas_margin;
+            x_offset = canvas_margin;
         }
 
-        if (rect.top + y_offset > canvas.height - 50) {
-            y_offset = 50;
-            x_offset = 50;
+        if (rect.top + y_offset > canvas.height - canvas_margin) {
+            y_offset = canvas_margin;
+            x_offset = canvas_margin;
         }
 
         let new_coords = [rect.left + x_offset, rect.top + y_offset];

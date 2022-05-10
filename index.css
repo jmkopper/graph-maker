@@ -12,39 +12,53 @@
     --cinereous: #a18e8bff;
     --redwood: #996056ff;
     --black-coffee: #413438ff;
-}
-
-/** Reset */
-html, body, nav, ul, h1, h2, h3, h4, a, canvas {
+  }
+  
+  /** Reset */
+  html,
+  body,
+  nav,
+  ul,
+  h1,
+  h2,
+  h3,
+  h4,
+  a,
+  canvas {
     margin: 20px;
     padding: 0px;
     color: var(--text-color);
-}
-html, body {
-    font-family: 'Helvetica', sans-serif;
+  }
+  html,
+  body {
+    font-family: "Helvetica", sans-serif;
     font-size: var(--root-font-size);
     background: var(--bg);
     height: 100%;
     width: 100%;
-}
-*, body, button, input, select, textarea, canvas {
+  }
+  *,
+  body,
+  button,
+  input,
+  select,
+  textarea,
+  canvas {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     outline: 0;
-}
-
-#wrapper {
-    /*border: 1px solid black;*/
+  }
+  
+  #wrapper {
     overflow: hidden;
-}
-
-#canvasdiv {
-    float:left;
-    /* border: 1px solid red; */
-}
-
-#textAreadiv {
-    /* border: 1px solid green; */
+  }
+  
+  #canvasdiv {
+    float: left;
+  }
+  
+  #textAreadiv {
     overflow: hidden;
-}
+  }
+  

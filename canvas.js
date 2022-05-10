@@ -1,3 +1,5 @@
+/* canvas.js handles draw and other canvas-related actions */
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -13,6 +15,8 @@ const FONT_STYLE = 'bold 14px sans-serif';
 
 ctx.fillStyle = BG_COLOR;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+var rect = canvas.getBoundingClientRect();
 
 
 //

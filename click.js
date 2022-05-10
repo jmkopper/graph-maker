@@ -1,3 +1,5 @@
+/* click.js handles click and other mouse actions */
+
 // Fuzziness of edge detection (px)
 const EDGE_FORGIVENESS = 5;
 
@@ -166,6 +168,21 @@ function delete_node(node) {
     }
     update_edge_selector();
     draw();
+}
+
+// Get mouse position within canvas
+function get_mouse_pos(canvas, e) {
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+
+// Detect click inside canvas border
+function within_border(e) {
+    pos = get_mouse_pos(canvas, e);
+    return pos.x <= canvas.width && pos.y <= canvas.height && pos.x >= rect.left && pos.y >= rect.top;
 }
 
 window.onmousemove = move;

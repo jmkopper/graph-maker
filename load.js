@@ -1,3 +1,7 @@
+/* load.js is the first javascript file initialized by the html page
+    it contains support functions and initializes global variables
+    except those related to drawing the canvas */
+
 var nodes = [];
 var edges = [];
 var selection = undefined;
@@ -12,24 +16,6 @@ function set_state(s) {
     deselect();
     state = s;
     document.getElementById('stateText').innerHTML = 'State ' + s;
-}
-
-
-// Get mouse position within canvas
-function get_mouse_pos(canvas, e) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
-}
-
-
-// Detect click inside canvas border
-function within_border(e) {
-    pos = get_mouse_pos(canvas, e);
-    rect = canvas.getBoundingClientRect();
-    return pos.x <= canvas.width && pos.y <= canvas.height;
 }
 
 
