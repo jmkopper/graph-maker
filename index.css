@@ -8,10 +8,15 @@
     --thistle: #e8c7de;
     --independence: #3a405a;
 
-    --snow: #f7f3f2ff;
-    --cinereous: #a18e8bff;
-    --redwood: #996056ff;
-    --black-coffee: #413438ff;
+    --snow: #f7f3f2;
+    --cinereous: #a18e8b;
+    --redwood: #996056;
+    --black-coffee: #413438;
+
+    --teal: #0B7189;
+    --automic-tangerine: #F49D6E;
+    --glossy-graph: #B594B6;
+    --ghost-white: #FBFBFF;
   }
   
   /** Reset */

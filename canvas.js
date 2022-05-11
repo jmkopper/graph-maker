@@ -4,13 +4,13 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 const NODE_RADIUS = 15
-const NODE_COLOR = '#3a405a';
-const NODE_BORDER_COLOR = '#e8c7de';
-const SELECTED_NODE_COLOR = '#770000';
-const SELECTED_EDGE_COLOR = '#a9efda';
-const FONT_COLOR = '#a9efda';
+const NODE_COLOR = '#FBFBFF';
+const NODE_BORDER_COLOR = '#0B7189';
+const SELECTED_NODE_COLOR = '#FBFBFF';
+const SELECTED_EDGE_COLOR = '#F49D6E';
+const FONT_COLOR = '#0B7189';
 const EDGE_WEIGHT = 3;
-const BG_COLOR = '#3a405a';
+const BG_COLOR = '#FBFBFF';
 const FONT_STYLE = 'bold 14px sans-serif';
 
 ctx.fillStyle = BG_COLOR;

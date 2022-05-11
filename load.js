@@ -1,6 +1,7 @@
 /* load.js is the first javascript file initialized by the html page
     it contains support functions and initializes global variables
-    except those related to drawing the canvas */
+    except those related to drawing the canvas. essentially an elaborate fork of
+    https://dev.to/nyxtom/drawing-interactive-graphs-with-canvas-and-javascript-o1j */
 
 var nodes = [];
 var edges = [];
