@@ -182,7 +182,7 @@ function get_mouse_pos(canvas, e) {
 // Detect click inside canvas border
 function within_border(e) {
     pos = get_mouse_pos(canvas, e);
-    return pos.x <= canvas.width && pos.y <= canvas.height && pos.x >= rect.left && pos.y >= rect.top;
+    return pos.x <= canvas.width && pos.y <= canvas.height && pos.x >= 0 && pos.y >= 0;
 }
 
 window.onmousemove = move;
